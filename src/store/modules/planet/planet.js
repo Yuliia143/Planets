@@ -11,8 +11,7 @@ const state = {
     errored: false,
     loading: true,
     resolveData: false,
-    nextPage: null,
-    src: 'data:image/jpg;base64,'
+    nextPage: null
 };
 const getters = {
     getPlanets: state => {
@@ -39,17 +38,11 @@ const getters = {
         } else {
             return state.nextPage.substring(state.nextPage.lastIndexOf('=') + 1);
         }
-    },
-    getSrc: state => {
-        return state.src;
-    },
+    }
 };
 const mutations = {
     setPlanets(state, planet) {
         state.planets.push(planet);
-    },
-    setSrc(state, src) {
-        state.src = state.src.concat(src);
     },
     changeErrorState(state, error) {
         state.errored = error;
@@ -102,12 +95,12 @@ const actions = {
             })
     },
     loadPlanetImage({commit}, id) {
-        axios
+        return axios
             .get(`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`, {responseType: 'arraybuffer'})
             .then(response => {
                 console.log(response);
                 let src = new Buffer(response.data, 'binary').toString('base64');
-                commit('setSrc', src);
+                return `data:image/jpg;base64,${src}`
             })
     }
 };

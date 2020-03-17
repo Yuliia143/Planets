@@ -15,13 +15,18 @@ const routes = [
         component: PlanetsList,
         beforeEnter(to, from, next) {
             if (!store.getters.getResolveData) { //чи завантажено вже дані
-                store.dispatch('loadPlanets', 1)
-                    .then(body =>{
+                store.dispatch('loadPlanets', 1)// якщо ні, то запит
+                    .then(body => {
                         let idArray = body.data.results.map((planet => planet.id));
                         console.log(idArray);
-                        idArray.map(item=>store.dispatch('loadPlanetImage', item));
+                        idArray.map(item => {
+                            store.dispatch('loadPlanetImage', item).then(src => {
+                                let planet = store.getters.getPlanetById(item);
+                                planet['img'] = src;
+                            })
+                        })
                     })
-                    .then(() => next());// якщо ні, то запит
+                    .then(() => next());
             } else
                 next();
         }
@@ -41,7 +46,12 @@ const routes = [
                             });
                         }
                     })
-                    .then(store.dispatch('loadPlanetImage', to.params.id))
+                    .then(() => {
+                        store.dispatch('loadPlanetImage', to.params.id).then(src=>{
+                            let planet = store.getters.getPlanetById(to.params.id);
+                            planet['img'] = src;
+                        });
+                    })
                     .then(() => next());
             } else {
                 console.log(to.params.id);
@@ -53,7 +63,13 @@ const routes = [
                         .then((arrayOfResidents) => {
                             planet.residents = arrayOfResidents;
                         })
-                        .then(store.dispatch('loadPlanetImage', to.params.id))
+                        .then(() => {
+                            store.dispatch('loadPlanetImage', to.params.id).then(src=>{
+                                let planet = store.getters.getPlanetById(to.params.id);
+
+                                planet['img'] = src;
+                            });
+                        })
                         .then(() => next());
                 } else {
                     next();

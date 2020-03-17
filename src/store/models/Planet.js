@@ -6,6 +6,7 @@ export default class Planet {
         this._climate = planet.climate;
         this._terrain = planet.terrain;
         this._residents = planet.residents;
+        this._img = planet.img;
     }
     get name(){
         return this._name;
@@ -25,7 +26,13 @@ export default class Planet {
     get residents(){
         return this._residents;
     }
+    get img(){
+        return this._img;
+    }
     set residents(value){
         this._residents = value;
+    }
+    set img(value){
+        this._img = value;
     }
 }

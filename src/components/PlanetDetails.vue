@@ -2,7 +2,7 @@
     <div class="info">
         <div class="main_info">
             <h1>{{planet.name}}</h1>
-            <img :src="getSrc" alt="Planet">
+            <img :src="planet.img" alt="Planet">
         </div>
         <div class="other_info">
             <ul>
@@ -23,20 +23,13 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
-
     export default {
         name: "PlanetDetails",
         data() {
             return {
                 planet: this.$store.getters.getPlanetById(this.$route.params.id)
             }
-        },
-        computed: {
-            ...mapGetters([
-                'getSrc'
-            ])
-        },
+        }
     }
 </script>
 
